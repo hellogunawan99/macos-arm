@@ -78,20 +78,7 @@ setup_terminal() {
 }
 
 setup_homebrew() {
-    echo ""
-    echo "=== Setting up Homebrew ==="
-
-    if command -v brew &>/dev/null; then
-        echo "[=] Homebrew already installed"
-    else
-        echo "[+] Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zshrc"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    fi
-
-    echo "[+] Homebrew ready"
-    echo "    Run 'brew install <package>' to install packages"
+    "$PARENT_DIR/homebrew/setup.sh"
 }
 
 while true; do
@@ -124,25 +111,25 @@ while true; do
             echo "[+] Wallpaper Changer removed"
             ;;
         2)
-            echo ""
-            echo "[!] Terminal uninstall not implemented yet"
-            echo "    Manual: remove starship/FZF/plugin lines from ~/.zshrc"
+            "$PARENT_DIR/terminal/uninstall.sh"
             ;;
         3)
-            echo ""
-            echo "[!] Homebrew uninstall not implemented"
-            echo "    Run: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)'"
+            "$PARENT_DIR/homebrew/uninstall.sh"
             ;;
         4)
             echo ""
-            echo "[1/3] Stopping wallpaper daemon..."
+            echo "[1/4] Stopping wallpaper daemon..."
             launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
             rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
 
-            echo "[2/3] Removing PATH entries..."
+            echo "[2/4] Removing PATH entries..."
             sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
 
-            echo "[3/3] Done (Homebrew/Terminal manual cleanup needed)"
+            echo "[3/4] Uninstalling Terminal..."
+            "$PARENT_DIR/terminal/uninstall.sh"
+
+            echo "[4/4] Uninstalling Homebrew..."
+            "$PARENT_DIR/homebrew/uninstall.sh"
             ;;
         5) return ;;
         *) echo "Invalid option" ;;

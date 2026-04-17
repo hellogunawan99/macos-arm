@@ -6,12 +6,17 @@ Scripts and configs for macOS ARM (MacBook Air M1)
 
 ```
 macos-arm/
-├── wallpaper-changer/    # Auto wallpaper from Wallhaven
-├── terminal/             # Terminal setup (Starship, FZF, Vi mode, plugins)
-└── setup/                # Setup scripts
-    ├── setup.sh         # Interactive menu (calls other setups)
-    ├── install.sh        # Wallpaper only installer
-    └── uninstall.sh      # Cleanup script
+├── wallpaper-changer/
+│   ├── wp
+│   └── wp-daemon
+├── terminal/
+│   ├── setup.sh
+│   └── uninstall.sh
+├── homebrew/
+│   ├── setup.sh
+│   └── uninstall.sh
+└── setup/
+    └── setup.sh          # Main menu
 ```
 
 ## Quick Setup (Fresh Mac)
@@ -22,25 +27,19 @@ cd macos-arm
 ./setup/setup.sh
 ```
 
-Choose from the menu:
-- **1** - Wallpaper Changer only
-- **2** - Terminal setup
+Menu options:
+- **1** - Wallpaper Changer
+- **2** - Terminal (Starship, FZF, Vi mode, plugins)
 - **3** - Homebrew
 - **4** - Install everything
 - **5** - Uninstall
 - **6** - Exit
 
-## Manual Setup
+## Uninstall
 
-### Wallpaper Changer
-```bash
-./wallpaper-changer/wp              # Random anime wallpaper
-./wallpaper-changer/wp cyber        # Search wallpaper
-./wallpaper-changer/wp --help       # Show help
-```
-
-### Terminal
-```bash
-./terminal/setup.sh
-```
-
+Choose option **5** from the menu, then select what to uninstall:
+- **1** - Wallpaper Changer
+- **2** - Terminal
+- **3** - Homebrew
+- **4** - Everything
+- **5** - Back
