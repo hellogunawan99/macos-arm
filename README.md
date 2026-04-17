@@ -2,18 +2,19 @@
 
 Scripts and configs for macOS ARM (MacBook Air M1)
 
-## Wallpaper Changer
+## Structure
 
-Auto-download and rotate anime wallpapers from Wallhaven every 20 minutes.
+```
+macos-arm/
+├── wallpaper-changer/    # Auto wallpaper from Wallhaven
+├── terminal/             # Terminal setup (Starship, FZF, Vi mode, plugins)
+└── setup/                # Setup scripts
+    ├── setup.sh         # Interactive menu (calls other setups)
+    ├── install.sh        # Wallpaper only installer
+    └── uninstall.sh      # Cleanup script
+```
 
-### Features
-
-- Fetches high-quality anime wallpapers (2560x1440+) from Wallhaven
-- Auto-changes wallpaper every 20 minutes via background daemon
-- Manual trigger with `wp` command
-- Keeps only last 10 wallpapers (auto-cleanup)
-
-### Setup (Fresh Mac)
+## Quick Setup (Fresh Mac)
 
 ```bash
 git clone https://github.com/hellogunawan99/macos-arm.git
@@ -23,23 +24,25 @@ cd macos-arm
 
 Choose from the menu:
 - **1** - Wallpaper Changer only
-- **2** - Terminal setup (Starship, FZF, Vi mode, plugins)
+- **2** - Terminal setup
 - **3** - Dev Tools (NVM, Bun, Docker CLI)
 - **4** - Install everything
 
-### Usage
+## Manual Setup
 
+### Wallpaper Changer
 ```bash
-wp              # Random anime wallpaper
-wp cyber        # Search for "cyber" wallpaper
-wp cars         # Search for "cars" wallpaper
-wp anime girl   # Search for anime girl wallpaper
-wp --help       # Show help
+./wallpaper-changer/wp              # Random anime wallpaper
+./wallpaper-changer/wp cyber        # Search wallpaper
+./wallpaper-changer/wp --help       # Show help
 ```
 
-Wallpapers stored in `~/Pictures/wallpapers/`
+### Terminal
+```bash
+./terminal/setup.sh
+```
 
-### Uninstall
+## Uninstall
 
 ```bash
 ./setup/uninstall.sh
