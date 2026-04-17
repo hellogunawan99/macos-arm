@@ -1,0 +1,102 @@
+#!/bin/bash
+
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+STATE_FILE="$WALLPAPER_DIR/.last_change"
+LOCK_FILE="$WALLPAPER_DIR/.lock"
+INTERVAL=1200
+
+mkdir -p "$WALLPAPER_DIR"
+
+if [[ ! -f "$WALLPAPER_DIR/wallpapers.db" ]]; then
+    sqlite3 "$WALLPAPER_DIR/wallpapers.db" "CREATE TABLE wallpapers (id INTEGER PRIMARY KEY, path TEXT, wallhaven_id TEXT, last_shown INTEGER)"
+fi
+
+download_wallpaper() {
+    local page=$(($RANDOM % 100 + 1))
+    local api_url="https://wallhaven.cc/api/v1/search?categories=110&purity=100&sorting=random&order=desc&page=$page&resolutions=3840x2160,2560x1440,2880x1800"
+
+    local response=$(curl -s "$api_url" -H "User-Agent: Mozilla/5.0")
+    local img_url=$(echo "$response" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data['data'][0]['path'] if data['data'] else '')" 2>/dev/null)
+
+    if [[ -z "$img_url" ]]; then
+        echo "Failed to fetch wallpaper"
+        return 1
+    fi
+
+    local wh_id=$(basename "$img_url")
+    local ext="${wh_id##*.}"
+    local filename="${wh_id%.*}"
+    local save_path="$WALLPAPER_DIR/${filename}.${ext}"
+
+    if [[ -f "$save_path" ]]; then
+        echo "Wallpaper already exists: $save_path"
+    else
+        curl -sL "$img_url" -o "$save_path" --max-time 30
+        if [[ $? -ne 0 ]]; then
+            echo "Failed to download"
+            rm -f "$save_path"
+            return 1
+        fi
+    fi
+
+    echo "$save_path"
+    echo "$wh_id" > "$WALLPAPER_DIR/.current_id"
+}
+
+set_wallpaper() {
+    local path="$1"
+    if [[ ! -f "$path" ]]; then
+        echo "File not found: $path"
+        return 1
+    fi
+
+    sqlite3 "$WALLPAPER_DIR/wallpapers.db" "INSERT OR REPLACE INTO wallpapers (path, wallhaven_id, last_shown) VALUES ('$path', '$(cat $WALLPAPER_DIR/.current_id 2>/dev/null)', $(date +%s))"
+
+    osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$path\""
+    touch "$STATE_FILE"
+
+    local count=$(sqlite3 "$WALLPAPER_DIR/wallpapers.db" "SELECT COUNT(*) FROM wallpapers")
+    if [[ $count -gt 10 ]]; then
+        sqlite3 "$WALLPAPER_DIR/wallpapers.db" "DELETE FROM wallpapers WHERE id IN (SELECT id FROM wallpapers ORDER BY last_shown ASC LIMIT $(($count - 10)))"
+        for old_path in $(sqlite3 "$WALLPAPER_DIR/wallpapers.db" "SELECT path FROM wallpapers ORDER BY last_shown ASC LIMIT $(($count - 10))"); do
+            rm -f "$old_path"
+        done
+    fi
+
+    echo "Wallpaper set: $(basename "$path")"
+}
+
+manual_mode() {
+    touch "$LOCK_FILE"
+    local new_wallpaper=$(download_wallpaper)
+    if [[ $? -eq 0 && -n "$new_wallpaper" ]]; then
+        set_wallpaper "$new_wallpaper"
+    fi
+}
+
+auto_mode() {
+    if [[ -f "$LOCK_FILE" ]]; then
+        local lock_age=$(($(date +%s) - $(stat -f %m "$LOCK_FILE" 2>/dev/null || echo $(date +%s))))
+        if [[ $lock_age -lt $INTERVAL ]]; then
+            exit 0
+        fi
+        rm -f "$LOCK_FILE"
+    fi
+
+    if [[ -f "$STATE_FILE" ]]; then
+        local last_change=$(($(date +%s) - $(stat -f %m "$STATE_FILE" 2>/dev/null || echo $(date +%s))))
+        if [[ $last_change -lt $INTERVAL ]]; then
+            exit 0
+        fi
+    fi
+
+    local new_wallpaper=$(download_wallpaper)
+    if [[ $? -eq 0 && -n "$new_wallpaper" ]]; then
+        set_wallpaper "$new_wallpaper"
+    fi
+}
+
+case "${1:-}" in
+    auto) auto_mode ;;
+    *) manual_mode ;;
+esac

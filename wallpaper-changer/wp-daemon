@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+INTERVAL=1200
+
+while true; do
+    "$SCRIPT_DIR/wp" auto
+    sleep $INTERVAL
+done &
