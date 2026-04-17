@@ -102,20 +102,51 @@ while true; do
     uninstall() {
     echo ""
     echo "=== Uninstall ==="
-
-    echo "[1/3] Stopping wallpaper daemon..."
-    launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
-    rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
-    echo "[+] Daemon stopped"
-
-    echo "[2/3] Removing PATH entries..."
-    sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
-    echo "[+] PATH cleaned"
-
-    echo "[3/3] Wallpapers kept in ~/Pictures/wallpapers (delete manually if wanted)"
-
     echo ""
-    echo "Done! Restart terminal or run: source ~/.zshrc"
+    echo "  [1] Wallpaper Changer"
+    echo "  [2] Terminal"
+    echo "  [3] Homebrew"
+    echo "  [4] Everything"
+    echo "  [5] Back"
+    echo ""
+    read -p "Select option [1-5]: " uninstall_choice
+
+    case $uninstall_choice in
+        1)
+            echo ""
+            echo "[1/2] Stopping wallpaper daemon..."
+            launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
+            rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
+            echo "[+] Daemon stopped"
+
+            echo "[2/2] Removing PATH entries..."
+            sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
+            echo "[+] Wallpaper Changer removed"
+            ;;
+        2)
+            echo ""
+            echo "[!] Terminal uninstall not implemented yet"
+            echo "    Manual: remove starship/FZF/plugin lines from ~/.zshrc"
+            ;;
+        3)
+            echo ""
+            echo "[!] Homebrew uninstall not implemented"
+            echo "    Run: /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)'"
+            ;;
+        4)
+            echo ""
+            echo "[1/3] Stopping wallpaper daemon..."
+            launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
+            rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
+
+            echo "[2/3] Removing PATH entries..."
+            sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
+
+            echo "[3/3] Done (Homebrew/Terminal manual cleanup needed)"
+            ;;
+        5) return ;;
+        *) echo "Invalid option" ;;
+    esac
 }
 
 case $choice in
