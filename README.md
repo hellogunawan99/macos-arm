@@ -27,6 +27,8 @@ Choose from the menu:
 - **2** - Terminal setup
 - **3** - Homebrew
 - **4** - Install everything
+- **5** - Uninstall
+- **6** - Exit
 
 ## Manual Setup
 
@@ -42,8 +44,3 @@ Choose from the menu:
 ./terminal/setup.sh
 ```
 
-## Uninstall
-
-```bash
-./setup/uninstall.sh
-```

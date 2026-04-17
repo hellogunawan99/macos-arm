@@ -18,7 +18,8 @@ show_menu() {
     echo "  [2] Terminal (Starship + FZF + Vi mode)"
     echo "  [3] Homebrew"
     echo "  [4] All of the above"
-    echo "  [5] Exit"
+    echo "  [5] Uninstall"
+    echo "  [6] Exit"
     echo ""
 }
 
@@ -98,7 +99,26 @@ while true; do
     read -p "Select option [1-5]: " choice
     echo ""
 
-    case $choice in
+    uninstall() {
+    echo ""
+    echo "=== Uninstall ==="
+
+    echo "[1/3] Stopping wallpaper daemon..."
+    launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
+    rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
+    echo "[+] Daemon stopped"
+
+    echo "[2/3] Removing PATH entries..."
+    sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
+    echo "[+] PATH cleaned"
+
+    echo "[3/3] Wallpapers kept in ~/Pictures/wallpapers (delete manually if wanted)"
+
+    echo ""
+    echo "Done! Restart terminal or run: source ~/.zshrc"
+}
+
+case $choice in
         1) setup_wallpaper; echo "" ;;
         2) setup_terminal; echo "" ;;
         3) setup_homebrew; echo "" ;;
@@ -114,7 +134,8 @@ while true; do
             echo "Restart terminal or run: source ~/.zshrc"
             exit 0
             ;;
-        5) echo "Exiting..."; exit 0 ;;
+        5) uninstall; echo "" ;;
+        6) echo "Exiting..."; exit 0 ;;
         *) echo "Invalid option" ;;
     esac
 
