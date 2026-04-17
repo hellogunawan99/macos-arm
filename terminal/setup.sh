@@ -53,11 +53,25 @@ fi
 if [[ ! -d "$PLUGIN_DIR/zsh-syntax-highlighting" ]]; then
     git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting "$PLUGIN_DIR/zsh-syntax-highlighting"
 fi
+if [[ ! -d "$PLUGIN_DIR/zsh-vi-mode" ]]; then
+    git clone --depth 1 https://github.com/jeffreytse/zsh-vi-mode "$PLUGIN_DIR/zsh-vi-mode"
+fi
 
 if ! grep -q 'zsh-history-substring-search.zsh' "$HOME/.zshrc" 2>/dev/null; then
+    echo 'source ~/.zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh' >> "$HOME/.zshrc"
     echo 'source ~/.zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh' >> "$HOME/.zshrc"
     echo 'source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' >> "$HOME/.zshrc"
     echo 'source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> "$HOME/.zshrc"
+fi
+
+echo '[6/6] Configuring vi mode colors...'
+if ! grep -q 'ZVM_COLOR' "$HOME/.zshrc" 2>/dev/null; then
+    cat >> "$HOME/.zshrc" << 'EOF'
+# Vi mode colors
+ZVM_INSERT_MODE_FOREGROUND=cyan
+ZVM_NORMAL_MODE_FOREGROUND=green
+ZVM_VI_ESCAPE_KEYBINDING=jj
+EOF
 fi
 
 echo ""

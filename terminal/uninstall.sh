@@ -18,6 +18,8 @@ brew uninstall fzf 2>/dev/null || true
 echo "[3/4] Removing Vi mode..."
 sed -i '' '/set -o vi/d' "$HOME/.zshrc" 2>/dev/null || true
 sed -i '' '/bindkey -v/d' "$HOME/.zshrc" 2>/dev/null || true
+sed -i '' '/zsh-vi-mode/d' "$HOME/.zshrc" 2>/dev/null || true
+sed -i '' '/ZVM_/d' "$HOME/.zshrc" 2>/dev/null || true
 
 echo "[4/4] Removing zsh plugins..."
 sed -i '' '/zsh-history-substring-search/d' "$HOME/.zshrc" 2>/dev/null || true
