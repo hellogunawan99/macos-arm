@@ -21,11 +21,14 @@ sed -i '' '/bindkey -v/d' "$HOME/.zshrc" 2>/dev/null || true
 sed -i '' '/zsh-vi-mode/d' "$HOME/.zshrc" 2>/dev/null || true
 sed -i '' '/ZVM_/d' "$HOME/.zshrc" 2>/dev/null || true
 
-echo "[4/4] Removing zsh plugins..."
+echo "[4/5] Removing zsh plugins..."
 sed -i '' '/zsh-history-substring-search/d' "$HOME/.zshrc" 2>/dev/null || true
 sed -i '' '/zsh-autosuggestions/d' "$HOME/.zshrc" 2>/dev/null || true
 sed -i '' '/zsh-syntax-highlighting/d' "$HOME/.zshrc" 2>/dev/null || true
 rm -rf "$HOME/.zsh/plugins" 2>/dev/null || true
+
+echo "[5/5] Removing Vim config..."
+rm -f "$HOME/.vimrc" 2>/dev/null || true
 
 echo ""
 echo "[+] Terminal uninstalled"

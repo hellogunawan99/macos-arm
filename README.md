@@ -7,7 +7,7 @@
 | Module | Description |
 |--------|-------------|
 | 🖼️ **Wallpaper Changer** | Auto-download anime wallpapers from Wallhaven, changes every 20 mins |
-| 💻 **Terminal** | Starship prompt, FZF fuzzy finder, Vi mode, zsh plugins |
+| 💻 **Terminal** | Starship, FZF, Vi mode, Vim config, zsh plugins |
 | 🍺 **Homebrew** | Package manager installation |
 | 🖼️ **Image Tools** | Resize & compress images to target file size |
 | 🤖 **AI Tools** | OpenCode, Claude Code, Gemini CLI |
@@ -60,6 +60,13 @@ wp --help      # Show help
 - Starship prompt (📦 git, node, python, etc.)
 - FZF Ctrl+T / Ctrl+R
 - Vi mode keybindings
+
+### Vim Config
+When using `vim` or `vi`:
+- Line numbers (absolute + relative)
+- Syntax highlighting
+- Auto indent
+- Search highlighting
 
 ### Image Resize
 ```bash

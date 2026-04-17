@@ -1,0 +1,58 @@
+" ===== VIM CONFIG =====
+" Better vim experience for macOS
+
+" Line numbers
+set number
+set relativenumber
+
+" Colors and syntax
+syntax on
+set t_Co=256
+set background=dark
+
+" Highlight current line
+set cursorline
+
+" Indentation
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+
+" Search
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+" Better splitting
+set splitbelow
+set splitright
+
+" No backup files (faster)
+set nobackup
+set nowritebackup
+set noswapfile
+
+" Show commands
+set showcmd
+
+" Visual autocomplete
+set wildmenu
+
+" Better backspace
+set backspace=indent,eol,start
+
+" Don't redraw during macro
+set lazyredraw
+
+" Enable mouse
+set mouse=a
+
+" 256 colors for terminal
+if !has('gui_running')
+    set t_Co=256
+endif
+
+" Color scheme (if available)
+" colorscheme desert
