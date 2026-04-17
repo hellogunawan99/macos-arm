@@ -25,7 +25,7 @@ cd macos-arm
 Choose from the menu:
 - **1** - Wallpaper Changer only
 - **2** - Terminal setup
-- **3** - Dev Tools (NVM, Bun, Docker CLI)
+- **3** - Homebrew
 - **4** - Install everything
 
 ## Manual Setup

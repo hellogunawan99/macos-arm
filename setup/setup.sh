@@ -16,7 +16,7 @@ show_menu() {
     echo ""
     echo "  [1] Wallpaper Changer"
     echo "  [2] Terminal (Starship + FZF + Vi mode)"
-    echo "  [3] Dev Tools (NVM, Bun, Docker CLI)"
+    echo "  [3] Homebrew"
     echo "  [4] All of the above"
     echo "  [5] Exit"
     echo ""
@@ -76,43 +76,21 @@ setup_terminal() {
     "$PARENT_DIR/terminal/setup.sh"
 }
 
-setup_devtools() {
+setup_homebrew() {
     echo ""
-    echo "=== Setting up Dev Tools ==="
+    echo "=== Setting up Homebrew ==="
 
-    echo "[1/3] NVM..."
-    export NVM_DIR="$HOME/.nvm"
-    if [[ ! -d "$NVM_DIR" ]]; then
-        mkdir "$NVM_DIR"
-        git clone --depth 1 https://github.com/nvm-sh/nvm.git "$NVM_DIR"
-        (cd "$NVM_DIR" && git checkout --depth 1 v0.39.7 2>/dev/null || true)
-    fi
-    if ! grep -q 'NVM_DIR' "$HOME/.zshrc" 2>/dev/null; then
-        echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME/.zshrc"
-        echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> "$HOME/.zshrc"
-    fi
-    echo "[+] NVM installed"
-
-    echo "[2/3] Bun..."
-    if command -v bun &>/dev/null; then
-        echo "[=] Bun already installed"
+    if command -v brew &>/dev/null; then
+        echo "[=] Homebrew already installed"
     else
-        curl -fsSL https://bun.sh/install | bash
-        echo 'export BUN_INSTALL="$HOME/.bun"' >> "$HOME/.zshrc"
-        echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> "$HOME/.zshrc"
-        echo "[+] Bun installed"
+        echo "[+] Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zshrc"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 
-    echo "[3/3] Docker CLI completions..."
-    if ! grep -q 'fpath.*docker/completions' "$HOME/.zshrc" 2>/dev/null; then
-        echo 'fpath=(/Users/gunawan/.docker/completions $fpath)' >> "$HOME/.zshrc"
-        echo 'autoload -Uz compinit' >> "$HOME/.zshrc"
-        echo 'compinit' >> "$HOME/.zshrc"
-    fi
-    echo "[+] Docker completions configured"
-
-    echo ""
-    echo "[+] Dev tools setup complete!"
+    echo "[+] Homebrew ready"
+    echo "    Run 'brew install <package>' to install packages"
 }
 
 while true; do
@@ -123,11 +101,11 @@ while true; do
     case $choice in
         1) setup_wallpaper; echo "" ;;
         2) setup_terminal; echo "" ;;
-        3) setup_devtools; echo "" ;;
+        3) setup_homebrew; echo "" ;;
         4)
             setup_wallpaper
             setup_terminal
-            setup_devtools
+            setup_homebrew
             echo ""
             echo "=========================================="
             echo "    All setup complete!"
