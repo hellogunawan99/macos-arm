@@ -10,6 +10,7 @@
 | 💻 **Terminal** | Starship prompt, FZF fuzzy finder, Vi mode, zsh plugins |
 | 🍺 **Homebrew** | Package manager installation |
 | 🖼️ **Image Tools** | Resize & compress images to target file size |
+| 🤖 **AI Tools** | OpenCode, Claude Code, Gemini CLI |
 
 ## Structure
 
@@ -19,6 +20,7 @@ macos-arm/
 ├── terminal/              # Terminal customization
 ├── homebrew/              # Package manager
 ├── image/                 # Image resize script
+├── ai-tools/              # OpenCode, Claude, Gemini CLI
 └── setup/                 # Main menu
     └── setup.sh
 ```
@@ -38,9 +40,10 @@ cd macos-arm
   [2] Terminal               - Starship + FZF + Vi mode
   [3] Homebrew               - Package manager
   [4] Image Tools             - Resize & compress images
-  [5] Install everything      - Setup semua
-  [6] Uninstall              - Hapus setup
-  [7] Exit
+  [5] AI Tools               - OpenCode, Claude Code, Gemini CLI
+  [6] Install everything      - Setup semua
+  [7] Uninstall              - Hapus setup
+  [8] Exit
 ```
 
 ## Usage
@@ -67,17 +70,26 @@ resize image.png 2MB      # Resize PNG to max 2MB
 
 Output: `image_resized.jpg` (original stays intact)
 
+### AI Tools
+```bash
+opencode              # OpenCode AI coding agent
+claude                # Claude Code
+claude-skip           # Claude Code with auto permission
+gemini                # Gemini CLI
+```
+
 ## Uninstall
 
-Pilih menu **6**, lalu pilih apa yang mau dihapus:
+Pilih menu **7**, lalu pilih apa yang mau dihapus:
 
 ```
   [1] Wallpaper Changer
   [2] Terminal
   [3] Homebrew
   [4] Image Tools
-  [5] Everything
-  [6] Back
+  [5] AI Tools
+  [6] Everything
+  [7] Back
 ```
 
 ## Author

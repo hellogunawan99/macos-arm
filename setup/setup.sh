@@ -18,9 +18,10 @@ show_menu() {
     echo "  [2] Terminal (Starship + FZF + Vi mode)"
     echo "  [3] Homebrew"
     echo "  [4] Image Tools (resize, compress)"
-    echo "  [5] All of the above"
-    echo "  [6] Uninstall"
-    echo "  [7] Exit"
+    echo "  [5] AI Tools (OpenCode, Claude Code, Gemini CLI)"
+    echo "  [6] All of the above"
+    echo "  [7] Uninstall"
+    echo "  [8] Exit"
     echo ""
 }
 
@@ -103,9 +104,13 @@ setup_image() {
     echo "           resize image.png 500KB"
 }
 
+setup_ai() {
+    "$PARENT_DIR/ai-tools/setup.sh"
+}
+
 while true; do
     show_menu
-    read -p "Select option [1-7]: " choice
+    read -p "Select option [1-8]: " choice
     echo ""
 
     uninstall() {
@@ -116,10 +121,11 @@ while true; do
     echo "  [2] Terminal"
     echo "  [3] Homebrew"
     echo "  [4] Image Tools"
-    echo "  [5] Everything"
-    echo "  [6] Back"
+    echo "  [5] AI Tools"
+    echo "  [6] Everything"
+    echo "  [7] Back"
     echo ""
-    read -p "Select option [1-6]: " uninstall_choice
+    read -p "Select option [1-7]: " uninstall_choice
 
     case $uninstall_choice in
         1)
@@ -144,24 +150,30 @@ while true; do
             echo "[!] To uninstall Image Tools, run: brew uninstall imagemagick jpegoptim pngquant"
             ;;
         5)
+            "$PARENT_DIR/ai-tools/uninstall.sh"
+            ;;
+        6)
             echo ""
-            echo "[1/5] Stopping wallpaper daemon..."
+            echo "[1/6] Stopping wallpaper daemon..."
             launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
             rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
 
-            echo "[2/5] Removing PATH entries..."
+            echo "[2/6] Removing PATH entries..."
             sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
 
-            echo "[3/5] Uninstalling Terminal..."
+            echo "[3/6] Uninstalling Terminal..."
             "$PARENT_DIR/terminal/uninstall.sh"
 
-            echo "[4/5] Uninstalling Homebrew..."
+            echo "[4/6] Uninstalling Homebrew..."
             "$PARENT_DIR/homebrew/uninstall.sh"
 
-            echo "[5/5] Uninstalling Image Tools..."
+            echo "[5/6] Uninstalling Image Tools..."
             brew uninstall imagemagick jpegoptim pngquant 2>/dev/null || true
+
+            echo "[6/6] Uninstalling AI Tools..."
+            "$PARENT_DIR/ai-tools/uninstall.sh"
             ;;
-        6) return ;;
+        7) return ;;
         *) echo "Invalid option" ;;
     esac
 }
@@ -171,11 +183,13 @@ case $choice in
         2) setup_terminal; echo "" ;;
         3) setup_homebrew; echo "" ;;
         4) setup_image; echo "" ;;
-        5)
+        5) setup_ai; echo "" ;;
+        6)
             setup_wallpaper
             setup_terminal
             setup_homebrew
             setup_image
+            setup_ai
             echo ""
             echo "=========================================="
             echo "    All setup complete!"
@@ -184,8 +198,8 @@ case $choice in
             echo "Restart terminal or run: source ~/.zshrc"
             exit 0
             ;;
-        6) uninstall; echo "" ;;
-        7) echo "Exiting..."; exit 0 ;;
+        7) uninstall; echo "" ;;
+        8) echo "Exiting..."; exit 0 ;;
         *) echo "Invalid option" ;;
     esac
 
