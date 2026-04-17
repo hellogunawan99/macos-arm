@@ -17,9 +17,10 @@ show_menu() {
     echo "  [1] Wallpaper Changer"
     echo "  [2] Terminal (Starship + FZF + Vi mode)"
     echo "  [3] Homebrew"
-    echo "  [4] All of the above"
-    echo "  [5] Uninstall"
-    echo "  [6] Exit"
+    echo "  [4] Image Tools (resize, compress)"
+    echo "  [5] All of the above"
+    echo "  [6] Uninstall"
+    echo "  [7] Exit"
     echo ""
 }
 
@@ -81,9 +82,25 @@ setup_homebrew() {
     "$PARENT_DIR/homebrew/setup.sh"
 }
 
+setup_image() {
+    echo ""
+    echo "=== Installing Image Tools ==="
+
+    echo "[1/2] Installing ImageMagick, jpegoptim, pngquant..."
+    brew install imagemagick jpegoptim pngquant
+
+    echo "[2/2] Making resize script executable..."
+    chmod +x "$PARENT_DIR/image/resize"
+
+    echo ""
+    echo "[+] Image tools installed!"
+    echo "    Usage: resize image.jpg 1MB"
+    echo "           resize image.png 500KB"
+}
+
 while true; do
     show_menu
-    read -p "Select option [1-5]: " choice
+    read -p "Select option [1-7]: " choice
     echo ""
 
     uninstall() {
@@ -93,10 +110,11 @@ while true; do
     echo "  [1] Wallpaper Changer"
     echo "  [2] Terminal"
     echo "  [3] Homebrew"
-    echo "  [4] Everything"
-    echo "  [5] Back"
+    echo "  [4] Image Tools"
+    echo "  [5] Everything"
+    echo "  [6] Back"
     echo ""
-    read -p "Select option [1-5]: " uninstall_choice
+    read -p "Select option [1-6]: " uninstall_choice
 
     case $uninstall_choice in
         1)
@@ -118,20 +136,27 @@ while true; do
             ;;
         4)
             echo ""
-            echo "[1/4] Stopping wallpaper daemon..."
+            echo "[!] To uninstall Image Tools, run: brew uninstall imagemagick jpegoptim pngquant"
+            ;;
+        5)
+            echo ""
+            echo "[1/5] Stopping wallpaper daemon..."
             launchctl unload "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist" 2>/dev/null || true
             rm -f "$HOME/Library/LaunchAgents/com.wallpaper.changer.plist"
 
-            echo "[2/4] Removing PATH entries..."
+            echo "[2/5] Removing PATH entries..."
             sed -i '' '/wallpaper-changer/d' "$HOME/.zshrc" 2>/dev/null || true
 
-            echo "[3/4] Uninstalling Terminal..."
+            echo "[3/5] Uninstalling Terminal..."
             "$PARENT_DIR/terminal/uninstall.sh"
 
-            echo "[4/4] Uninstalling Homebrew..."
+            echo "[4/5] Uninstalling Homebrew..."
             "$PARENT_DIR/homebrew/uninstall.sh"
+
+            echo "[5/5] Uninstalling Image Tools..."
+            brew uninstall imagemagick jpegoptim pngquant 2>/dev/null || true
             ;;
-        5) return ;;
+        6) return ;;
         *) echo "Invalid option" ;;
     esac
 }
@@ -140,10 +165,12 @@ case $choice in
         1) setup_wallpaper; echo "" ;;
         2) setup_terminal; echo "" ;;
         3) setup_homebrew; echo "" ;;
-        4)
+        4) setup_image; echo "" ;;
+        5)
             setup_wallpaper
             setup_terminal
             setup_homebrew
+            setup_image
             echo ""
             echo "=========================================="
             echo "    All setup complete!"
@@ -152,8 +179,8 @@ case $choice in
             echo "Restart terminal or run: source ~/.zshrc"
             exit 0
             ;;
-        5) uninstall; echo "" ;;
-        6) echo "Exiting..."; exit 0 ;;
+        6) uninstall; echo "" ;;
+        7) echo "Exiting..."; exit 0 ;;
         *) echo "Invalid option" ;;
     esac
 

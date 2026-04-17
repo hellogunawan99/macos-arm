@@ -1,0 +1,64 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]; then
+    echo "Usage: resize <filename> <target_size>"
+    echo "  Example: resize image.jpg 1MB"
+    echo "  Example: resize image.jpg 500KB"
+    echo "  Example: resize image.png 2MB"
+    echo ""
+    echo "Supported: JPG, JPEG, PNG"
+    exit 1
+fi
+
+INPUT="$1"
+TARGET="$2"
+
+if [[ ! -f "$INPUT" ]]; then
+    echo "File not found: $INPUT"
+    exit 1
+fi
+
+EXT="${INPUT##*.}"
+EXT_LOWER=$(echo "$EXT" | tr '[:upper:]' '[:lower:]')
+
+ORIGINAL_SIZE=$(stat -f%z "$INPUT")
+
+human_size() {
+    local bytes=$1
+    if [[ $bytes -ge 1073741824 ]]; then
+        echo "$(echo "scale=2; $bytes/1073741824" | bc)GB"
+    elif [[ $bytes -ge 1048576 ]]; then
+        echo "$(echo "scale=2; $bytes/1048576" | bc)MB"
+    elif [[ $bytes -ge 1024 ]]; then
+        echo "$(echo "scale=2; $bytes/1024" | bc)KB"
+    else
+        echo "${bytes}B"
+    fi
+}
+
+echo "Original size: $(human_size $ORIGINAL_SIZE)"
+
+OUTPUT="${INPUT%.*}_resized.${EXT}"
+
+case "$EXT_LOWER" in
+    jpg|jpeg)
+        magick "$INPUT" -define jpeg:extent="$TARGET" "$OUTPUT"
+        ;;
+    png)
+        magick "$INPUT" -define png:extent="$TARGET" "$OUTPUT"
+        ;;
+    *)
+        echo "Unsupported format: $EXT"
+        echo "Supported: JPG, JPEG, PNG"
+        exit 1
+        ;;
+esac
+
+if [[ -f "$OUTPUT" ]]; then
+    NEW_SIZE=$(stat -f%z "$OUTPUT")
+    echo "New size: $(human_size $NEW_SIZE)"
+    echo "Output: $OUTPUT"
+else
+    echo "Failed to resize"
+    exit 1
+fi

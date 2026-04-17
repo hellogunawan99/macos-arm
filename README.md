@@ -9,6 +9,7 @@
 | 🖼️ **Wallpaper Changer** | Auto-download anime wallpapers from Wallhaven, changes every 20 mins |
 | 💻 **Terminal** | Starship prompt, FZF fuzzy finder, Vi mode, zsh plugins |
 | 🍺 **Homebrew** | Package manager installation |
+| 🖼️ **Image Tools** | Resize & compress images to target file size |
 
 ## Structure
 
@@ -17,6 +18,7 @@ macos-arm/
 ├── wallpaper-changer/     # wp command + auto-change daemon
 ├── terminal/              # Terminal customization
 ├── homebrew/              # Package manager
+├── image/                 # Image resize script
 └── setup/                 # Main menu
     └── setup.sh
 ```
@@ -35,9 +37,10 @@ cd macos-arm
   [1] Wallpaper Changer      - Auto wallpaper dari Wallhaven
   [2] Terminal               - Starship + FZF + Vi mode
   [3] Homebrew               - Package manager
-  [4] Install everything     - Setup semua
-  [5] Uninstall              - Hapus setup
-  [6] Exit
+  [4] Image Tools             - Resize & compress images
+  [5] Install everything      - Setup semua
+  [6] Uninstall              - Hapus setup
+  [7] Exit
 ```
 
 ## Usage
@@ -55,16 +58,26 @@ wp --help      # Show help
 - FZF Ctrl+T / Ctrl+R
 - Vi mode keybindings
 
+### Image Resize
+```bash
+resize image.jpg 1MB      # Resize JPEG to max 1MB
+resize image.jpg 500KB    # Resize JPEG to max 500KB
+resize image.png 2MB      # Resize PNG to max 2MB
+```
+
+Output: `image_resized.jpg` (original stays intact)
+
 ## Uninstall
 
-Pilih menu **5**, lalu pilih apa yang mau dihapus:
+Pilih menu **6**, lalu pilih apa yang mau dihapus:
 
 ```
   [1] Wallpaper Changer
   [2] Terminal
   [3] Homebrew
-  [4] Everything
-  [5] Back
+  [4] Image Tools
+  [5] Everything
+  [6] Back
 ```
 
 ## Author
