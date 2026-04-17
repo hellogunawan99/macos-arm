@@ -102,5 +102,10 @@ auto_mode() {
 
 case "${1:-}" in
     auto) auto_mode ;;
+    help|--help|-h) echo "Usage: wp [search-term]
+       wp              - Random anime wallpaper
+       wp <term>       - Search wallpapers (e.g., wp cyber, wp cars)
+       wp auto         - Auto mode (for daemon)
+       wp --help       - Show this help"; exit 0 ;;
     *) manual_mode "$1" ;;
 esac
