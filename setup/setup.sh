@@ -86,11 +86,16 @@ setup_image() {
     echo ""
     echo "=== Installing Image Tools ==="
 
-    echo "[1/2] Installing ImageMagick, jpegoptim, pngquant..."
+    echo "[1/3] Installing ImageMagick, jpegoptim, pngquant..."
     brew install imagemagick jpegoptim pngquant
 
-    echo "[2/2] Making resize script executable..."
+    echo "[2/3] Making resize script executable..."
     chmod +x "$PARENT_DIR/image/resize"
+
+    echo "[3/3] Adding to PATH..."
+    if ! grep -q 'macos-arm/image' "$HOME/.zshrc" 2>/dev/null; then
+        echo 'export PATH="$HOME/dev/macos-arm/image:$PATH"' >> "$HOME/.zshrc"
+    fi
 
     echo ""
     echo "[+] Image tools installed!"
