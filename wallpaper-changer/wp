@@ -12,8 +12,11 @@ if [[ ! -f "$WALLPAPER_DIR/wallpapers.db" ]]; then
 fi
 
 download_wallpaper() {
-    local page=$(($RANDOM % 100 + 1))
-    local api_url="https://wallhaven.cc/api/v1/search?categories=110&purity=100&sorting=random&order=desc&page=$page&resolutions=3840x2160,2560x1440,2880x1800"
+    local search_term="$1"
+    local api_url="https://wallhaven.cc/api/v1/search?q=${search_term}&categories=110&purity=100&sorting=random&order=desc&page=1&resolutions=3840x2160,2560x1440,2880x1800"
+
+    local response=$(curl -s "$api_url" -H "User-Agent: Mozilla/5.0")
+    local img_url=$(echo "$response" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data['data'][0]['path'] if data['data'] else '')" 2>/dev/null)
 
     local response=$(curl -s "$api_url" -H "User-Agent: Mozilla/5.0")
     local img_url=$(echo "$response" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data['data'][0]['path'] if data['data'] else '')" 2>/dev/null)
@@ -67,8 +70,9 @@ set_wallpaper() {
 }
 
 manual_mode() {
+    local search_term="$1"
     touch "$LOCK_FILE"
-    local new_wallpaper=$(download_wallpaper)
+    local new_wallpaper=$(download_wallpaper "$search_term")
     if [[ $? -eq 0 && -n "$new_wallpaper" ]]; then
         set_wallpaper "$new_wallpaper"
     fi
@@ -98,5 +102,5 @@ auto_mode() {
 
 case "${1:-}" in
     auto) auto_mode ;;
-    *) manual_mode ;;
+    *) manual_mode "$1" ;;
 esac

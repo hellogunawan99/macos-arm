@@ -26,7 +26,10 @@ nohup /Users/gunawan/dev/macos-arm/wallpaper-changer/wp-daemon > /tmp/wp-daemon.
 ### Usage
 
 ```bash
-wp          # Change wallpaper now (resets 20min timer)
+wp              # Random anime wallpaper
+wp cyber        # Search for "cyber" wallpaper
+wp cars         # Search for "cars" wallpaper
+wp anime girl   # Search for anime girl wallpaper
 ```
 
 Wallpapers stored in `~/Pictures/wallpapers/`
