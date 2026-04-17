@@ -18,9 +18,14 @@ Auto-download and rotate anime wallpapers from Wallhaven every 20 minutes.
 ```bash
 git clone https://github.com/hellogunawan99/macos-arm.git
 cd macos-arm
-./setup/install.sh
-source ~/.zshrc
+./setup/setup.sh
 ```
+
+Choose from the menu:
+- **1** - Wallpaper Changer only
+- **2** - Terminal setup (Starship, FZF, Vi mode, plugins)
+- **3** - Dev Tools (NVM, Bun, Docker CLI)
+- **4** - Install everything
 
 ### Usage
 
